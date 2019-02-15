@@ -18,7 +18,7 @@ ENV MAVEN_HOME /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-#RUN  sed -i '/<mirrors>/a\ <mirror>\n<id>goodrain-repo</id>\n<name>goodrain repo</name>\n<url>http://maven.goodrain.me</url>\n<mirrorOf>central</mirrorOf>\n</mirror>' ${MAVEN_HOME}/conf/settings.xml
+RUN  sed -i '/<mirrors>/a\ <mirror>\n<id>goodrain-repo</id>\n<name>goodrain repo</name>\n<url>http://maven.goodrain.me</url>\n<mirrorOf>central</mirrorOf>\n</mirror>' ${MAVEN_HOME}/conf/settings.xml
 COPY settings-docker.xml /usr/share/maven/ref/
 
 #ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
@@ -38,6 +38,8 @@ RUN mkdir /app && \
 
 COPY --from=builder /app/target /app/target
 
+COPY --from=builder /app/run.sh /app/run.sh
+
 EXPOSE 5000
 
-ENTRYPOINT ["java -Dserver.port=$PORT $JAVA_OPTS -jar target/*.jar"]
+ENTRYPOINT ["bash -c /app/run.sh"]
