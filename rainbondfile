@@ -1,0 +1,6 @@
+language: Java-maven
+ports:
+  - port: 80
+    protocol: http
+envs:
+  JAVA_ADD_OPTS: -server -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+ParallelRefProcEnabled
